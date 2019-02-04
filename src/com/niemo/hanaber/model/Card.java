@@ -5,8 +5,8 @@ public class Card {
     public final Suit suit;
     public final int number;
 
-    public Suit hintedSuit;
-    public int hintedNumber;
+    public boolean isSuitHinted;
+    public boolean isNumberHinted;
 
     public Card(Suit suit, int number) {
         assert number >=1 && number <= 5;
@@ -15,18 +15,18 @@ public class Card {
     }
 
     public String getHintText() {
-        if(hintedNumber == 0 && hintedSuit == null) {
+        if(!isSuitHinted && !isNumberHinted) {
             return "UNKNOWN";
         }
         String hint = "";
-        if(hintedSuit != null){
-            hint += hintedSuit;
+        if(isSuitHinted){
+            hint += suit;
         }
-        if(hintedNumber != 0) {
-            if(hintedSuit != null) {
+        if(isNumberHinted) {
+            if(isSuitHinted) {
                 hint += "_";
             }
-            hint += hintedNumber;
+            hint += number;
         }
         return hint;
     }
