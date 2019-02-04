@@ -11,6 +11,6 @@ public class ComputerPlayer extends Player {
 
     @Override
     public Action takeTurn(GameState gameState, Map<Player, List<Card>> otherPlayersCards) {
-        return Action.createDiscardAction(this, 4);
+        return Action.createDiscardAction(this, hand.size() - 1);
     }
 }
