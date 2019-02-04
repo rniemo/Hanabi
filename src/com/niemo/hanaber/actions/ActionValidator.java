@@ -48,9 +48,9 @@ public class ActionValidator {
                 return false;
             }
             Card card = action.affectedPlayer.getHand().get(cardIndex);
-            if(action.hintType.suit != null && !card.suit.equals(action.hintType.suit)) {
+            if(action.hintType.suit != null && !card.getSuit().equals(action.hintType.suit)) {
                 return false;
-            } else if(card.number != action.hintType.num){
+            } else if(card.getNumber() != action.hintType.num){
                 return false;
             }
         }

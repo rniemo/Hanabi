@@ -42,7 +42,7 @@ public class HumanPlayer extends Player {
         for(Map.Entry<Player, List<Card>> entry : otherPlayersCards.entrySet()) {
             System.out.print("Player " + (playerNum + 1) + ": ");
             for(Card card : entry.getValue()) {
-                System.out.print(card.suit + "_" + card.number + ", ");
+                System.out.print(card.getSuit() + "_" + card.getNumber() + ", ");
             }
             System.out.println();
         }

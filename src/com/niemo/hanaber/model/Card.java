@@ -2,11 +2,11 @@ package com.niemo.hanaber.model;
 
 public class Card {
 
-    public final Suit suit;
-    public final int number;
+    private final Suit suit;
+    private final int number;
 
-    public boolean isSuitHinted;
-    public boolean isNumberHinted;
+    private boolean isSuitHinted;
+    private boolean isNumberHinted;
 
     public Card(Suit suit, int number) {
         assert number >=1 && number <= 5;
@@ -29,5 +29,21 @@ public class Card {
             hint += number;
         }
         return hint;
+    }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setSuitHinted() {
+        isSuitHinted = true;
+    }
+
+    public void setNumberHinted() {
+        isNumberHinted = true;
     }
 }

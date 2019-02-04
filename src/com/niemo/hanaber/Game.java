@@ -72,9 +72,9 @@ public class Game {
         if(action.type.equals(Action.Type.DISCARD)){
             gameState.addToDiscard(card);
         } else if(action.type.equals(Action.Type.PLAY)) {
-            int playableNumber = gameState.fireworkState.get(card.suit) + 1;
-            if(card.number == playableNumber) {
-                gameState.fireworkState.put(card.suit, playableNumber);
+            int playableNumber = gameState.fireworkState.get(card.getSuit()) + 1;
+            if(card.getNumber() == playableNumber) {
+                gameState.fireworkState.put(card.getSuit(), playableNumber);
             }else {
                 gameState.boomsAvailable--;
                 gameState.addToDiscard(card);
@@ -88,9 +88,9 @@ public class Game {
             int cardIndex = action.cardNums.get(i);
             Card card = action.affectedPlayer.getHand().get(cardIndex);
             if(action.hintType.suit != null) {
-                card.isSuitHinted = true;
+                card.setSuitHinted();
             }else{
-                card.isNumberHinted = true;
+                card.setNumberHinted();
             }
         }
     }
