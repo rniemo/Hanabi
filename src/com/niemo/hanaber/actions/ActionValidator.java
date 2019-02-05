@@ -48,9 +48,6 @@ public class ActionValidator {
      * - there can only be num or suit specified in the hint type
      */
     private static String validateHintAction(Player player, Action action) {
-        System.out.println(player);
-        System.out.println(action.affectedPlayer);
-
         int numCards = action.cardNums.size();
         int playerHandSize = action.affectedPlayer.getHand().size();
         if(player.equals(action.affectedPlayer)) {
