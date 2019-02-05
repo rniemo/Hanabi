@@ -46,13 +46,15 @@ public class Game {
         while(!gameIsOver()){
             Player player = players.get(playerTurn);
             Action action = null;
+            String actionErrorMessage = null;
             do {
-                if(action != null){
-                    System.out.println("u can't perform that action lmao silly");
+                if(actionErrorMessage != null){
+                    System.out.println(actionErrorMessage);
                 }
                 action = player.takeTurn(gameState, getOtherPlayersCards(player));
+                actionErrorMessage = ActionValidator.validate(player, action);
             }
-            while(!ActionValidator.validate(player, action));
+            while(actionErrorMessage != null);
             performAction(action);
             playerTurn = (playerTurn + 1) % players.size();
         }
