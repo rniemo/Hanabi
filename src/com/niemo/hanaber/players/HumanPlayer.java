@@ -35,7 +35,11 @@ public class HumanPlayer extends Player {
         return parsedAction;
     }
 
+    /**
+     * Displays the information that the current player can see. E.g. game state, other players' cards, etc.
+     */
     private void displayInformation(GameState gameState, List<Player> otherPlayers) {
+        System.out.println();
         System.out.println("Explosions remaining: " + gameState.boomsAvailable);
         System.out.println("Hints remaining: " + gameState.hintsAvailable);
         int playerNum = 0;
@@ -46,15 +50,21 @@ public class HumanPlayer extends Player {
             }
             System.out.println();
         }
+        System.out.println("Board state:");
+        gameState.printFireworkState();
+        System.out.println();
         System.out.print("Your cards: ");
         for(Card card : this.hand) {
             System.out.print(card.getHintText() + ", ");
         }
         System.out.println();
-        System.out.println("Board state:");
-        gameState.printFireworkState();
     }
 
+    /**
+     * Takes in an input string from the user and the other players' data, and attempts to convert
+     * the string to an Action. Performs basic boundary checks on indices.
+     * Returns null if the action could not be parsed.
+     */
     private Action parseAction(String input, List<Player> players) throws NumberFormatException{
         String[] inputs = input.split(" ");
         String command = inputs[0];
@@ -65,40 +75,50 @@ public class HumanPlayer extends Player {
             return parsePlayOrDiscardAction(inputs, Action.Type.PLAY);
         }
         if(command.equals("hint") || command.equals("h")) {
-            if(inputs.length < 4){
-                System.out.println(input);
-                for(String in : inputs){
-                    System.out.println(in);
-                }
-                System.out.println("Expected at least 3 inputs for command " + command);
-                return null;
-            }
-            int playerNum = Integer.parseInt(inputs[1]);
-            if(playerNum < 1 || playerNum > players.size()) {
-                System.out.println("Can't hint to a player # outside of range 1-" + players.size() + ".");
-                return null;
-            }
-            Player player = players.get(playerNum - 1);
-            String[] cardNumStrings = inputs[2].split(",");
-            List<Integer> cardNums = new ArrayList<>();
-            for(String str : cardNumStrings) {
-                int cardNum = Integer.parseInt(str);
-                if(cardNum < 1 || cardNum > player.hand.size()) {
-                    System.out.println("Can't hint card outside of range 1-" + player.hand.size() + ".");
-                    return null;
-                }
-                cardNums.add(cardNum);
-            }
-            HintType hintType = parseHintType(inputs[3], player);
-            if(hintType == null){
-                return null;
-            }
-            return Action.createHintAction(player, cardNums, hintType);
+            return parseHintAction(inputs, players);
         }
         return null;
     }
 
-    private HintType parseHintType(String input, Player player) {
+    /**
+     * Parses a hint action from a list of inputs provided by the user, and a list of players.
+     * The inputs are the arguments to the "hint" command. i.e. input[0] is not "hint", but instead the player #
+     */
+    private Action parseHintAction(String[] inputs, List<Player> otherPlayers ) {
+        if(inputs.length < 4){
+            System.out.println("Expected at least 3 inputs for command hint");
+            return null;
+        }
+        int playerNum = Integer.parseInt(inputs[1]);
+        if(playerNum < 1 || playerNum > otherPlayers.size()) {
+            System.out.println("Can't hint to a player # outside of range 1-" + otherPlayers.size() + ".");
+            return null;
+        }
+        Player player = otherPlayers.get(playerNum - 1);
+        String[] cardNumStrings = inputs[2].split(",");
+        List<Integer> cardNums = new ArrayList<>();
+        for(String str : cardNumStrings) {
+            int cardNum = Integer.parseInt(str);
+            if(cardNum < 1 || cardNum > player.hand.size()) {
+                System.out.println("Can't hint card outside of range 1-" + player.hand.size() + ".");
+                return null;
+            }
+            cardNums.add(cardNum);
+        }
+        HintType hintType = parseHintType(inputs[3]);
+        if(hintType == null){
+            return null;
+        }
+        return Action.createHintAction(player, cardNums, hintType);
+    }
+
+    /**
+     * Parses the hint type for a given user input. Attempts to first parse the input as a suit. For the input to be
+     * a suit, it can either be the full suit e.g. "red" or just the first letter of the suit e.g. "r". If the input
+     * could not be parsed as a suit, it's parsed as an integer and checked to be between 1-5.
+     * If the input could not be parsed, null is returned.
+     */
+    private HintType parseHintType(String input) {
         Map<String, Suit> validSuitInputs = new HashMap<>();
         for(Suit suit : Suit.values()) {
             String suitName = suit.toString().toLowerCase();
@@ -117,6 +137,10 @@ public class HumanPlayer extends Player {
         return new HintType(cardNum);
     }
 
+    /**
+     * Parses a play or discard action from a list of inputs.
+     * The inputs are the arguments to the command. i.e. input[0] is not "hint", but instead the card #.
+     */
     private Action parsePlayOrDiscardAction(String[] inputs, Action.Type type) throws NumberFormatException {
         String command = "play";
         if(type == Action.Type.DISCARD){
@@ -137,6 +161,9 @@ public class HumanPlayer extends Player {
         return Action.createPlayAction(this, cardNum);
     }
 
+    /**
+     * Displays the commands the user can use to play.
+     */
     private void displayHelp() {
         System.out.println("Commands: ");
         System.out.println("  'discard {N}' or short form 'd N' to discard the Nth in your hand from the left");
