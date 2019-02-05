@@ -65,8 +65,10 @@ public class ActionValidator {
                 return "Hinted card index \"" + cardIndex + "\" must be between 1 and " + playerHandSize;
             }
             Card card = action.affectedPlayer.getHand().get(cardIndex - 1);
-            if(action.hintType.suit != null && !card.getSuit().equals(action.hintType.suit)) {
-                return "Hinted suit \"" + action.hintType.suit + "\" must match card suit \"" + card.getSuit() + "\".";
+            if(action.hintType.suit != null) {
+                if(!card.getSuit().equals(action.hintType.suit)){
+                    return "Hinted suit \"" + action.hintType.suit + "\" must match card suit \"" + card.getSuit() + "\".";
+                }
             } else if(card.getNumber() != action.hintType.num){
                 return "Hinted number \"" + action.hintType.num + "\" must match card number \"" + card.getNumber() + "\".";
             }
