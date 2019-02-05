@@ -11,9 +11,9 @@ import java.util.*;
 public class HumanPlayer extends Player {
 
     @Override
-    public Action takeTurn(GameState gameState, Map<Player, List<Card>> otherPlayersCards) {
+    public Action takeTurn(GameState gameState, List<Player> otherPlayers) {
         Action parsedAction = null;
-        displayInformation(gameState, otherPlayersCards);
+        displayInformation(gameState, otherPlayers);
         do {
             System.out.print("Enter your action, or 'help' if you're lost: ");
             Scanner scanner = new Scanner(System.in);
@@ -22,11 +22,11 @@ public class HumanPlayer extends Player {
             if (input.equals("help")) {
                 displayHelp();
             } else if (input.equals("info")) {
-                displayInformation(gameState, otherPlayersCards);
+                displayInformation(gameState, otherPlayers);
             } else {
                 try {
 
-                    parsedAction = parseAction(input, new ArrayList<>(otherPlayersCards.keySet()));
+                    parsedAction = parseAction(input, otherPlayers);
                 }catch(NumberFormatException e) {
                     System.out.println("Expected integer in command, failed to parse.");
                 }
@@ -35,13 +35,13 @@ public class HumanPlayer extends Player {
         return parsedAction;
     }
 
-    private void displayInformation(GameState gameState, Map<Player, List<Card>> otherPlayersCards) {
+    private void displayInformation(GameState gameState, List<Player> otherPlayers) {
         System.out.println("Explosions remaining: " + gameState.boomsAvailable);
         System.out.println("Hints remaining: " + gameState.hintsAvailable);
         int playerNum = 0;
-        for(Map.Entry<Player, List<Card>> entry : otherPlayersCards.entrySet()) {
+        for(Player player : otherPlayers) {
             System.out.print("Player " + (playerNum + 1) + ": ");
-            for(Card card : entry.getValue()) {
+            for(Card card : player.getHand()) {
                 System.out.print(card.getSuit() + "_" + card.getNumber() + ", ");
             }
             System.out.println();
@@ -87,7 +87,7 @@ public class HumanPlayer extends Player {
                     System.out.println("Can't hint card outside of range 1-" + player.hand.size() + ".");
                     return null;
                 }
-                cardNums.add(cardNum - 1);
+                cardNums.add(cardNum);
             }
             HintType hintType = parseHintType(inputs[3], player);
             if(hintType == null){
@@ -132,9 +132,9 @@ public class HumanPlayer extends Player {
             return null;
         }
         if(type == Action.Type.DISCARD) {
-            return Action.createDiscardAction(this, cardNum - 1);
+            return Action.createDiscardAction(this, cardNum);
         }
-        return Action.createPlayAction(this, cardNum - 1);
+        return Action.createPlayAction(this, cardNum);
     }
 
     private void displayHelp() {

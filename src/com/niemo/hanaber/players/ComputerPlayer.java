@@ -10,7 +10,7 @@ import java.util.Map;
 public class ComputerPlayer extends Player {
 
     @Override
-    public Action takeTurn(GameState gameState, Map<Player, List<Card>> otherPlayersCards) {
-        return Action.createDiscardAction(this, hand.size() - 1);
+    public Action takeTurn(GameState gameState, List<Player> otherPlayers) {
+        return Action.createDiscardAction(this, hand.size());
     }
 }

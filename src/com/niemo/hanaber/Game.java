@@ -51,7 +51,7 @@ public class Game {
                 if(actionErrorMessage != null){
                     System.out.println(actionErrorMessage);
                 }
-                action = player.takeTurn(gameState, getOtherPlayersCards(player));
+                action = player.takeTurn(gameState, getOtherPlayers(player));
                 actionErrorMessage = ActionValidator.validate(player, action);
             }
             while(actionErrorMessage != null);
@@ -70,7 +70,7 @@ public class Game {
     }
 
     private void performDiscardOrPlayAction(Action action) {
-        Card card = action.affectedPlayer.removeCard(action.cardNums.get(0));
+        Card card = action.affectedPlayer.removeCard(action.cardNums.get(0) - 1);
         if(action.type.equals(Action.Type.DISCARD)){
             gameState.addToDiscard(card);
         } else if(action.type.equals(Action.Type.PLAY)) {
@@ -87,7 +87,7 @@ public class Game {
 
     private void performHintAction(Action action) {
         for(int i = 0; i < action.cardNums.size(); i++) {
-            int cardIndex = action.cardNums.get(i);
+            int cardIndex = action.cardNums.get(i) - 1;
             Card card = action.affectedPlayer.getHand().get(cardIndex);
             if(action.hintType.suit != null) {
                 card.setSuitHinted();
@@ -102,14 +102,14 @@ public class Game {
      * @param self the player whose cards should not be returned
      * @return
      */
-    private Map<Player, List<Card>> getOtherPlayersCards(Player self) {
-        Map<Player, List<Card>> map = new HashMap<>();
+    private List<Player> getOtherPlayers(Player self) {
+        List<Player> otherPlayers = new ArrayList<>();
         for(Player player : players){
             if(!player.equals(self)){
-                map.put(player, player.getHand());
+                otherPlayers.add(player);
             }
         }
-        return map;
+        return otherPlayers;
     }
 
 

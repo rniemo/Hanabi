@@ -27,6 +27,6 @@ public abstract class Player {
         return hand;
     }
 
-    public abstract Action takeTurn(GameState gameState, Map<Player, List<Card>> otherPlayersCards);
+    public abstract Action takeTurn(GameState gameState, List<Player> otherPlayers);
 
 }

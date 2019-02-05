@@ -48,6 +48,9 @@ public class ActionValidator {
      * - there can only be num or suit specified in the hint type
      */
     private static String validateHintAction(Player player, Action action) {
+        System.out.println(player);
+        System.out.println(action.affectedPlayer);
+
         int numCards = action.cardNums.size();
         int playerHandSize = action.affectedPlayer.getHand().size();
         if(player.equals(action.affectedPlayer)) {
@@ -64,11 +67,11 @@ public class ActionValidator {
             if(cardIndex < 1 || cardIndex > playerHandSize){
                 return "Hinted card index \"" + cardIndex + "\" must be between 1 and " + playerHandSize;
             }
-            Card card = action.affectedPlayer.getHand().get(cardIndex);
+            Card card = action.affectedPlayer.getHand().get(cardIndex - 1);
             if(action.hintType.suit != null && !card.getSuit().equals(action.hintType.suit)) {
                 return "Hinted suit \"" + action.hintType.suit + "\" must match card suit \"" + card.getSuit() + "\".";
             } else if(card.getNumber() != action.hintType.num){
-                return "Hinted number \"" + action.hintType.num + "\" must match card number \"" + card.getNumber();
+                return "Hinted number \"" + action.hintType.num + "\" must match card number \"" + card.getNumber() + "\".";
             }
         }
         // TODO(niemo): ensure that the hint hints EVERYTHING in the hand, not just some things
